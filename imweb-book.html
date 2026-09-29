@@ -165,7 +165,7 @@
   var ticking=false;
   function onScroll(){ if(ticking) return; ticking=true; requestAnimationFrame(function(){ticking=false; syncTop(); fab();}); }
   addEventListener('scroll',onScroll,{passive:true}); addEventListener('resize',onScroll);
-  syncTop(); setTimeout(syncTop,600); setTimeout(syncTop,2000);
+  syncTop(); setInterval(function(){ if(!document.hidden){ syncTop(); fab(); } },400); // 아임웹 메뉴가 스르륵 나타날 때도 따라가도록
   function offset(){return headerH+bar.offsetHeight+10;}
   function scrollToEl(el){ var y=el.getBoundingClientRect().top+pageYOffset-offset(); scrollTo(0,Math.max(0,y)); }
 
