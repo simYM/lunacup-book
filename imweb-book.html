@@ -131,8 +131,7 @@
   function go(id,q,noHash){
     var el=document.getElementById(id); if(!el) return;
     clear(); if(q) mark(el,q);
-    var reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    el.scrollIntoView({behavior:reduce?'auto':'smooth',block:'start'});
+    el.scrollIntoView({block:'start'});
     active(id); close();
     if(!noHash && history.replaceState) history.replaceState(null,'','#'+id);
   }
