@@ -1,0 +1,14 @@
+<!-- 루나컵 월경컵 TMI 웹북: 짧은 불러오기 코드 (전체 코드가 아임웹에 안 들어갈 때만 사용) -->
+<div id="lcbook-mount" style="min-height:60vh"></div>
+<script>
+(function(){
+  var URL = 'https://cdn.jsdelivr.net/gh/simYM/lunacup-book@4d2a4a0/imweb-book.html';
+  fetch(URL).then(function(r){ return r.text(); }).then(function(html){
+    var mount = document.getElementById('lcbook-mount');
+    mount.innerHTML = html;
+    [].forEach.call(mount.querySelectorAll('script'), function(old){
+      var s = document.createElement('script'); s.textContent = old.textContent; old.parentNode.replaceChild(s, old);
+    });
+  });
+})();
+</script>
