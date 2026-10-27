@@ -276,7 +276,7 @@
   var tt; function toast(m){var t=$('.lcb-toast'); t.textContent=m; t.hidden=false; clearTimeout(tt); tt=setTimeout(function(){t.hidden=true},1800);}
   root.addEventListener('click',function(e){
     var g=e.target.closest('[data-go]');
-    if(g){e.preventDefault(); go(g.getAttribute('data-go'),g.getAttribute('data-q')); res.hidden=true; return;}
+    if(g){e.preventDefault(); e.stopPropagation(); go(g.getAttribute('data-go'),g.getAttribute('data-q')); res.hidden=true; return;}
     var c=e.target.closest('[data-copy]');
     if(c){var url=location.href.split('#')[0]+'#'+c.getAttribute('data-copy');
       try{navigator.clipboard.writeText(url).then(function(){toast('링크를 복사했어요')},function(){toast(url)});}catch(_){toast(url);} }

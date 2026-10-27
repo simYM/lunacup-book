@@ -449,3 +449,19 @@ def apply(b, ST):
                 for j, x in enumerate(xs):
                     t = x['x'].strip() if isinstance(x['x'], str) else ''
                     x['boxhead'] = j == 0 and len(xs) > 1 and (x['t'] == 'h' or (len(t) <= 22 and not t.endswith(('.', '요', '다', '!'))))
+
+
+TYPO = [('빙 둘려 만졌을', '빙 둘러 만졌을'), ('통계적으로10~15%', '통계적으로 10~15%'), ('잴 때 마다', '잴 때마다'),
+        ('앉을 때 마다', '앉을 때마다'), ('써도 되요?', '써도 돼요?'), ('파우치세척과 열탕', '세척과 열탕'),
+        ('‘키퍼The Keeper’', '‘키퍼(The Keeper)’'), ('질병관리센터CDC', '질병관리센터(CDC)'), ('잘 안되면', '잘 안 되면'),
+        ('매일 매일', '매일매일'), ('캐서리나 톨턴', '캐서리나 돌턴')]
+_apply = apply
+def apply(b, ST):
+    _apply(b, ST)
+    for c in b:
+        for s in c['sections']:
+            for a, z in TYPO: s['title'] = s['title'].replace(a, z)
+            for x in s['blocks']:
+                if isinstance(x.get('x'), str) and any(a in x['x'] for a, _ in TYPO):
+                    for a, z in TYPO: x['x'] = x['x'].replace(a, z)
+                    x.pop('marks', None)
