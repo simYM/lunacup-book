@@ -1,0 +1,305 @@
+<!-- 루나컵 월경컵 TMI 웹북 (아임웹 코드 위젯용) -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=Noto+Sans+KR:wght@400;500;700&display=swap">
+<style>
+/* 레이아웃: 아임웹 상단 메뉴 바로 아래 붙는 얇은 바 + 왼쪽 고정 목차(모바일은 서랍) + 접히는 질문 목록. 아임웹 스타일과 겹치지 않도록 #lcbook 안에서만 적용 */
+#lcbook{
+  --lcb-top:0px; /* 스크립트가 실제 상단 메뉴 높이를 재서 채워요 */
+  --bg:#f7f6fa; --surface:#fff; --ink:#26222e; --muted:#6d6878; --line:#e3e0ea;
+  --accent:#7b3a64; --accent-soft:#f3e8ef; --mark:#ffe28a;
+  --c-blue:#0384bf; --c-green:#2b8a37; --c-pink:#d1007c; --c-purple:#693293; --u-pink:#ec008c; --box-grey:#ececef;
+  --f-display:"Gowun Batang","Nanum Myeongjo",Georgia,serif;
+  --f-body:"Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.8;text-align:left;
+}
+#lcbook *{box-sizing:border-box}
+#lcbook [hidden]{display:none!important}
+#lcbook a{color:inherit;text-decoration:none}
+#lcbook button{font:inherit;color:inherit;cursor:pointer;margin:0}
+#lcbook :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+/* 상단 바 */
+#lcbook .lcb-bar{position:sticky;top:var(--lcb-top);z-index:20;background:var(--surface);border-bottom:1px solid var(--line)}
+#lcbook .lcb-bar-in{display:flex;align-items:center;gap:12px;padding:10px 20px;max-width:1200px;margin:0 auto;min-height:60px}
+#lcbook .lcb-brand{display:flex;flex-direction:column;line-height:1.25;min-width:0}
+#lcbook .lcb-brand b{font-family:var(--f-display);font-size:19px;white-space:nowrap}
+#lcbook .lcb-brand span{font-size:12px;color:var(--muted)}
+#lcbook .lcb-icon{display:none;align-items:center;justify-content:center;width:40px;height:40px;border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:0;flex:none}
+#lcbook .lcb-icon svg{width:18px;height:18px;stroke:var(--ink)}
+#lcbook .lcb-menu{display:none;border:1px solid var(--line);background:var(--surface);border-radius:8px;padding:6px 10px;font-size:14px;flex:none}
+#lcbook .lcb-search{position:relative;margin-left:auto;flex:1;max-width:380px;min-width:0}
+#lcbook .lcb-search input{width:100%;border:1px solid var(--line);background:var(--bg);border-radius:999px;padding:9px 14px 9px 36px;font-size:15px;color:var(--ink);font-family:var(--f-body);margin:0;height:auto;-webkit-appearance:none;appearance:none}
+#lcbook .lcb-search input:focus{outline:none;border-color:var(--accent);background:var(--surface)}
+#lcbook .lcb-search > svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:16px;height:16px;stroke:var(--muted)}
+#lcbook .lcb-results{position:absolute;right:0;left:0;top:calc(100% + 6px);background:var(--surface);border:1px solid var(--line);border-radius:12px;box-shadow:0 12px 30px rgba(20,10,30,.12);max-height:60vh;overflow:auto;padding:6px}
+#lcbook .lcb-results button{display:block;width:100%;text-align:left;background:none;border:0;border-radius:8px;padding:9px 10px;line-height:1.5}
+#lcbook .lcb-results button:hover{background:var(--accent-soft)}
+#lcbook .lcb-rc{font-size:11px;color:var(--muted)}
+#lcbook .lcb-rt{font-weight:500;font-size:14px}
+#lcbook .lcb-rs{font-size:13px;color:var(--muted);margin-top:2px}
+#lcbook .lcb-empty{padding:12px;font-size:14px;color:var(--muted)}
+#lcbook mark{background:var(--mark);color:inherit;border-radius:2px;padding:0 1px}
+
+/* 목차 + 본문 */
+#lcbook .lcb-wrap{display:grid;grid-template-columns:280px minmax(0,1fr);max-width:1200px;margin:0 auto}
+#lcbook .lcb-toc{position:sticky;top:calc(var(--lcb-top) + 61px);align-self:start;max-height:calc(100vh - var(--lcb-top) - 61px);overflow:auto;overscroll-behavior:contain;padding:24px 16px 40px;border-right:1px solid var(--line)}
+#lcbook .lcb-toc-t{font-size:12px;letter-spacing:.08em;color:var(--muted);margin:0 0 8px}
+#lcbook .lcb-ch{margin:18px 0 6px;font-family:var(--f-display);font-weight:700;font-size:15px}
+#lcbook .lcb-toc ul{list-style:none;margin:0;padding:0}
+#lcbook .lcb-toc li a{display:flex;gap:6px;border-radius:6px;padding:5px 8px;font-size:14px;line-height:1.45}
+#lcbook .lcb-toc li a:hover{background:var(--accent-soft)}
+#lcbook .lcb-toc li a.on{background:var(--accent-soft);color:var(--accent);font-weight:500}
+#lcbook .lcb-qk{flex:none;font-size:11px;font-weight:700;color:var(--accent);padding-top:2px}
+#lcbook .lcb-main{padding:28px 20px 140px!important;min-width:0}
+#lcbook .lcb-col{max-width:720px;margin:0 auto}
+#lcbook .lcb-tools{display:flex;justify-content:flex-end;margin:0 0 4px}
+#lcbook .lcb-all{border:0;background:none;color:var(--muted);font-size:13px;padding:4px 0;text-decoration:underline;text-underline-offset:3px}
+#lcbook .lcb-chapter{font-family:var(--f-display);font-size:15px;font-weight:700;color:var(--accent);letter-spacing:.04em;margin:40px 0 4px;padding:0}
+#lcbook .lcb-chapter:first-of-type{margin-top:8px}
+
+/* 접히는 항목 */
+#lcbook .lcb-sec{border-bottom:1px solid var(--line)}
+#lcbook .lcb-h{margin:0;padding:0;font-size:inherit;font-weight:inherit}
+#lcbook .lcb-tg{display:flex;align-items:center;gap:12px;width:100%;background:none;border:0;padding:16px 2px;text-align:left}
+#lcbook .lcb-tt{flex:1;font-family:var(--f-display);font-size:19px;line-height:1.45;font-weight:700;color:var(--ink);text-wrap:balance}
+#lcbook .lcb-q .lcb-tt::before{content:"Q.";color:var(--accent);margin-right:8px}
+#lcbook .lcb-chev{flex:none;width:10px;height:10px;border-right:2px solid var(--muted);border-bottom:2px solid var(--muted);transform:rotate(45deg);margin:0 6px 4px 0;transition:transform .15s}
+#lcbook .lcb-tg[aria-expanded="true"] .lcb-chev{transform:rotate(-135deg);margin-bottom:-4px}
+#lcbook .lcb-tg[aria-expanded="true"] .lcb-tt{color:var(--accent)}
+#lcbook .lcb-body{padding:0 2px 24px}
+#lcbook .lcb-body p{margin:10px 0;padding:0;font-size:16px;line-height:1.85;color:var(--ink)}
+#lcbook .lcb-body p.lcb-lead{font-weight:700;font-size:17px;margin-top:4px}
+/* PDF 강조 스타일 */
+#lcbook .lcb-body p.lcb-p-blue,#lcbook .lcb-c-blue{color:var(--c-blue)}
+#lcbook .lcb-body p.lcb-p-green,#lcbook .lcb-c-green{color:var(--c-green)}
+#lcbook .lcb-body p.lcb-p-pink,#lcbook .lcb-c-pink{color:var(--c-pink)}
+#lcbook .lcb-body p.lcb-p-purple,#lcbook .lcb-c-purple{color:var(--c-purple)}
+#lcbook .lcb-body p[class*="lcb-p-"]{font-weight:700}
+#lcbook .lcb-c-blue,#lcbook .lcb-c-green,#lcbook .lcb-c-pink,#lcbook .lcb-c-purple{font-weight:700}
+#lcbook .lcb-body p.lcb-big{font-family:var(--f-display);font-size:21px;line-height:1.5;margin:22px 0}
+#lcbook .lcb-u{text-decoration:underline;text-decoration-color:var(--u-pink);text-decoration-thickness:1.5px;text-underline-offset:5px;text-decoration-skip-ink:none;font-weight:500}
+#lcbook .lcb-box{margin:18px 0;padding:14px 18px;border-radius:12px}
+#lcbook .lcb-box p{margin:6px 0!important;font-size:15px!important;line-height:1.75!important}
+#lcbook .lcb-box p:first-child{margin-top:0!important}
+#lcbook .lcb-box p:last-child{margin-bottom:0!important}
+#lcbook .lcb-box-green{border:1.5px solid var(--c-green);background:var(--surface)}
+#lcbook .lcb-box-green p{color:var(--c-green)}
+#lcbook .lcb-box-grey{background:var(--box-grey)}
+#lcbook .lcb-box p.lcb-lead{font-size:15px!important}
+#lcbook .lcb-box-green p[class*="lcb-p-"],#lcbook .lcb-box-green p.lcb-lead{font-weight:400}
+#lcbook .lcb-box p.lcb-boxhead{font-weight:700}
+#lcbook .lcb-body p.lcb-p-bold{color:inherit}
+#lcbook .lcb-body a.lcb-link{color:var(--c-blue);text-decoration:underline;text-underline-offset:3px}
+#lcbook .lcb-isteps{list-style:none;margin:16px 0 22px!important;padding:0!important;display:grid;gap:12px}
+#lcbook .lcb-isteps li{display:flex;align-items:flex-start;gap:16px;margin:0!important;padding:0!important}
+#lcbook .lcb-isteps img{flex:0 0 auto;width:42%;max-width:220px;height:auto;border-radius:6px;display:block}
+#lcbook .lcb-isteps div{flex:1;min-width:0;padding-top:6px;font-size:15px;line-height:1.7}
+#lcbook .lcb-isteps strong{display:block;font-weight:700;margin-bottom:2px}
+#lcbook .lcb-panel{position:relative;margin:18px 0 24px;border-radius:14px;overflow:hidden;background-size:cover;background-repeat:no-repeat;background-color:#4b8fd0}
+#lcbook .lcb-panel-dark{background-position:center bottom}
+#lcbook .lcb-panel-dark .lcb-pn-in{padding:30px 26px 46%;color:#fff;text-shadow:0 1px 6px rgba(0,40,90,.35);background:linear-gradient(180deg,rgba(22,78,150,.7) 0%,rgba(22,78,150,.55) 55%,rgba(22,78,150,0) 85%)}
+#lcbook .lcb-panel-light{background-position:left center;background-color:#f4f4f2}
+#lcbook .lcb-panel-light .lcb-pn-in{margin-left:auto;width:min(100%,430px);padding:28px 26px;color:#1f2a37;background:linear-gradient(90deg,rgba(255,255,255,0),rgba(255,255,255,.86) 18%,rgba(255,255,255,.92))}
+#lcbook .lcb-panel p{margin:0 0 10px!important;font-size:15px!important;line-height:1.75!important;color:inherit!important}
+#lcbook .lcb-panel p.lcb-pn-h{font-size:22px!important;font-weight:800;letter-spacing:.02em;margin:22px 0 10px!important}
+#lcbook .lcb-panel p.lcb-pn-h:first-child{margin-top:0!important}
+#lcbook .lcb-panel p.lcb-pn-s{font-weight:700;font-size:16px!important;margin-bottom:6px!important}
+#lcbook .lcb-panel-light p.lcb-pn-s{color:var(--c-blue)!important;margin-top:14px!important}
+#lcbook .lcb-panel-light p.lcb-pn-s:first-child{margin-top:0!important}
+#lcbook .lcb-panel ul{margin:4px 0 0 18px!important;padding:0!important}
+#lcbook .lcb-panel li{font-size:15px;line-height:1.75;list-style:disc}
+@media (max-width:560px){#lcbook .lcb-panel-light{background-size:100% auto;background-position:center top}#lcbook .lcb-panel-light .lcb-pn-in{width:100%;margin-top:66%;background:#f7f7f5}#lcbook .lcb-panel-dark .lcb-pn-in{padding-bottom:70%}}
+#lcbook .lcb-body p.lcb-p-src{font-style:italic;font-weight:400;color:var(--muted)}
+#lcbook .lcb-btns{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin:-6px 0 22px}
+#lcbook .lcb-btn{display:inline-flex;align-items:center;gap:6px;padding:11px 20px;border-radius:999px;background:var(--c-blue);color:#fff!important;font-weight:700;font-size:15px;text-decoration:none!important;line-height:1.3}
+#lcbook .lcb-btn:hover{filter:brightness(1.08)}
+#lcbook .lcb-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px 20px;margin:12px 0 22px}
+#lcbook .lcb-grid figure{margin:0}
+#lcbook .lcb-grid h4{margin:0 0 8px;font-size:16px;font-weight:700;color:var(--c-blue)}
+#lcbook .lcb-grid img{display:block;width:100%;max-width:240px;aspect-ratio:1/1;object-fit:contain;height:auto;margin:0 auto 8px}
+#lcbook .lcb-grid p{margin:4px 0!important;font-size:15px;line-height:1.7}
+#lcbook .lcb-cover{margin:0 0 28px;text-align:center}
+#lcbook .lcb-cover img{display:inline-block;width:100%;max-width:420px;height:auto;border-radius:8px;box-shadow:0 6px 24px rgba(0,0,0,.12)}
+@media (max-width:480px){#lcbook .lcb-grid{gap:14px 12px}#lcbook .lcb-grid p{font-size:14px}}
+#lcbook .lcb-pics.lcb-two{gap:6px;align-items:center}
+#lcbook .lcb-pics.lcb-two img{flex:1 1 0;min-width:0;width:50%}
+#lcbook .lcb-body p.lcb-cap{font-size:13px;line-height:1.6;color:var(--muted);text-align:center;margin:-8px 0 18px}
+#lcbook .lcb-fig{margin:18px 0}
+#lcbook .lcb-pics{background:#fff;border:1px solid var(--line);border-radius:12px;padding:8px;display:flex;justify-content:center;overflow:hidden}
+#lcbook .lcb-pics img{display:block;width:auto;max-width:100%;max-height:85vh;height:auto;object-fit:contain;margin:0 auto}
+#lcbook .lcb-steps{margin:14px 0;padding:0;list-style:none;display:grid;gap:8px;counter-reset:s}
+#lcbook .lcb-steps li{counter-increment:s;display:flex;gap:12px;align-items:baseline;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 14px}
+#lcbook .lcb-steps li::before{content:counter(s);font-family:var(--f-display);font-weight:700;color:var(--accent)}
+#lcbook .lcb-foot{display:flex;justify-content:flex-end;margin-top:8px}
+#lcbook .lcb-copy{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:4px 12px;font-size:12px;color:var(--muted)}
+#lcbook .lcb-copy:hover{color:var(--accent);border-color:var(--accent)}
+
+/* 플로팅 버튼 (채널톡 버튼 위) */
+#lcbook .lcb-fab{position:fixed;right:20px;bottom:calc(104px + env(safe-area-inset-bottom,0px));z-index:9990;display:flex;flex-direction:column;gap:10px}
+#lcbook .lcb-fab button{width:48px;height:48px;border-radius:999px;border:1px solid var(--line);background:var(--surface);box-shadow:0 6px 18px rgba(20,10,30,.16);display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:10px;line-height:1.1;color:var(--ink);padding:0}
+#lcbook .lcb-fab svg{width:18px;height:18px;stroke:var(--accent);margin-bottom:1px}
+#lcbook .lcb-fab .lcb-fab-toc{display:none}
+
+#lcbook .lcb-toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:9px 16px;border-radius:999px;font-size:14px;z-index:9999}
+#lcbook .lcb-scrim{display:none}
+
+@media (max-width:860px){
+  #lcbook .lcb-bar-in{padding:8px 16px;min-height:56px}
+  #lcbook .lcb-wrap{grid-template-columns:minmax(0,1fr)}
+  #lcbook .lcb-menu{display:inline-block}
+  #lcbook .lcb-brand span{display:none}
+  #lcbook .lcb-icon{display:inline-flex;margin-left:auto}
+  #lcbook .lcb-search{display:none}
+  #lcbook.lcb-searching .lcb-menu,#lcbook.lcb-searching .lcb-brand,#lcbook.lcb-searching .lcb-open-search{display:none}
+  #lcbook.lcb-searching .lcb-search{display:block;max-width:none;margin-left:0}
+  #lcbook.lcb-searching .lcb-close-search{display:inline-flex;margin-left:0}
+  #lcbook .lcb-toc{position:fixed!important;top:0!important;bottom:auto!important;left:0;width:min(86vw,320px);height:100vh!important;height:100dvh!important;max-height:none!important;overflow-y:auto!important;-webkit-overflow-scrolling:touch;z-index:10001;background:var(--surface);transform:translateX(-105%);transition:transform .2s ease;padding:24px 16px 80px}
+  #lcbook.lcb-open .lcb-toc{transform:none}
+  #lcbook.lcb-open .lcb-scrim{display:block;position:fixed;inset:0;background:rgba(10,5,15,.4);z-index:10000}
+  #lcbook .lcb-main{padding:20px 16px 140px!important}
+  #lcbook .lcb-tt{font-size:17px}
+  #lcbook .lcb-pics{padding:4px;border-radius:10px}
+  #lcbook .lcb-fab{right:16px;bottom:calc(92px + env(safe-area-inset-bottom,0px))}
+  #lcbook .lcb-fab .lcb-fab-toc{display:flex}
+}
+#lcbook .lcb-close-search{display:none}
+@media (prefers-reduced-motion:reduce){#lcbook .lcb-toc,#lcbook .lcb-chev{transition:none}}
+</style>
+
+<div id="lcbook">
+  <div class="lcb-bar"><div class="lcb-bar-in">
+    <button type="button" class="lcb-menu" aria-expanded="false">목차</button>
+    <div class="lcb-brand"><b>월경컵 TMI</b><span>루나컵 입문자 가이드북</span></div>
+    <button type="button" class="lcb-icon lcb-open-search" aria-label="검색 열기"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></button>
+    <div class="lcb-search" role="search">
+      <svg viewBox="0 0 24 24" fill="none" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <input type="search" id="lcb-q" placeholder="궁금한 단어를 찾아보세요 (예: 소변, 실링)" autocomplete="off" aria-label="가이드북 검색">
+      <div class="lcb-results" hidden></div>
+    </div>
+    <button type="button" class="lcb-icon lcb-close-search" aria-label="검색 닫기"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+  </div></div>
+  <div class="lcb-scrim"></div>
+  <div class="lcb-wrap">
+    <div class="lcb-toc" role="navigation" aria-label="목차"><p class="lcb-toc-t">INDEX</p>__TOC__</div>
+    <div class="lcb-main" role="main"><div class="lcb-col">
+      <div class="lcb-tools"><button type="button" class="lcb-all">모두 펼치기</button></div>
+      __BODY__
+    </div></div>
+  </div>
+  <div class="lcb-fab" hidden>
+    <button type="button" class="lcb-fab-toc" aria-label="목차 열기"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h10"/></svg>목차</button>
+    <button type="button" class="lcb-fab-top" aria-label="맨 위로"><svg viewBox="0 0 24 24" fill="none" stroke-width="2"><path d="M12 19V5M5 12l7-7 7 7"/></svg>맨 위</button>
+  </div>
+  <div class="lcb-toast" hidden></div>
+</div>
+
+<script>
+(function(){
+  var root=document.getElementById('lcbook'); if(!root) return;
+  var $=function(s){return root.querySelector(s)}, $$=function(s){return root.querySelectorAll(s)};
+  var esc=function(s){return s.replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})};
+  var rx=function(q){return new RegExp(q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'gi')};
+  var hl=function(s,q){return esc(s).replace(rx(q),function(m){return '<mark>'+m+'</mark>'})};
+  var bar=$('.lcb-bar');
+
+  // 아임웹 상단 메뉴 높이를 실제로 재서 바를 그 아래에 붙임
+  var headerH=0;
+  function measureHeader(){
+    var h=0, xs=[8, innerWidth/2, innerWidth-8];
+    xs.forEach(function(x){
+      var els=document.elementsFromPoint ? document.elementsFromPoint(x,2) : [];
+      els.forEach(function(el){
+        if(root.contains(el)) return;
+        for(var e=el;e&&e!==document.body&&e!==document.documentElement;e=e.parentElement){
+          var p=getComputedStyle(e).position;
+          if(p==='fixed'||p==='sticky'){var r=e.getBoundingClientRect(); if(r.top<=2&&r.bottom>h&&r.bottom<innerHeight*0.4) h=r.bottom; break;}
+        }
+      });
+    });
+    return Math.round(h);
+  }
+  function syncTop(){var h=measureHeader(); if(h!==headerH){headerH=h; root.style.setProperty('--lcb-top',h+'px');}}
+  var ticking=false;
+  function onScroll(){ if(ticking) return; ticking=true; requestAnimationFrame(function(){ticking=false; syncTop(); fab();}); }
+  addEventListener('scroll',onScroll,{passive:true}); addEventListener('resize',onScroll);
+  syncTop(); setInterval(function(){ if(!document.hidden){ syncTop(); fab(); } },400); // 아임웹 메뉴가 스르륵 나타날 때도 따라가도록
+  function offset(){return headerH+bar.offsetHeight+10;}
+  function scrollToEl(el){ var y=el.getBoundingClientRect().top+pageYOffset-offset(); scrollTo(0,Math.max(0,y)); }
+
+  // 접기/펼치기
+  function setOpen(sec,open){ var t=sec.querySelector('.lcb-tg'), b=sec.querySelector('.lcb-body'); t.setAttribute('aria-expanded',String(open)); b.hidden=!open; }
+  root.addEventListener('click',function(e){
+    var t=e.target.closest('.lcb-tg'); if(!t) return;
+    var sec=t.closest('.lcb-sec'); setOpen(sec, t.getAttribute('aria-expanded')!=='true'); active(sec.id);
+  });
+  var allBtn=$('.lcb-all'), allOpen=false;
+  allBtn.addEventListener('click',function(){ allOpen=!allOpen; [].forEach.call($$('.lcb-sec'),function(s){setOpen(s,allOpen)}); allBtn.textContent=allOpen?'모두 접기':'모두 펼치기'; });
+
+  // 검색
+  var index=[].map.call($$('.lcb-sec'),function(sec){
+    var ch=sec.previousElementSibling; while(ch && !ch.classList.contains('lcb-chapter')) ch=ch.previousElementSibling;
+    return {id:sec.id,t:sec.querySelector('.lcb-tt').textContent,ch:ch?ch.textContent:'',text:sec.querySelector('.lcb-body').textContent};
+  });
+  var input=$('#lcb-q'), res=$('.lcb-results');
+  function snip(t,q){var i=t.toLowerCase().indexOf(q.toLowerCase()); if(i<0) return ''; var a=Math.max(0,i-28),e=Math.min(t.length,i+q.length+40); return (a?'…':'')+hl(t.slice(a,e),q)+(e<t.length?'…':'');}
+  function search(){
+    var q=input.value.trim(); if(!q){res.hidden=true;clear();return;}
+    var ql=q.toLowerCase();
+    var hits=index.filter(function(r){return (r.t+' '+r.text).toLowerCase().indexOf(ql)>=0}).slice(0,30);
+    res.innerHTML=hits.map(function(r){return '<button type="button" data-go="'+r.id+'" data-q="'+esc(q)+'"><div class="lcb-rc">'+esc(r.ch)+'</div><div class="lcb-rt">'+hl(r.t,q)+'</div><div class="lcb-rs">'+snip(r.text,q)+'</div></button>'}).join('')
+      || '<div class="lcb-empty">\''+esc(q)+'\'에 맞는 내용이 없어요. 다른 단어로 찾아보세요.</div>';
+    res.hidden=false;
+  }
+  input.addEventListener('input',search);
+  input.addEventListener('focus',function(){if(input.value.trim())search()});
+  input.addEventListener('keydown',function(e){if(e.key==='Escape'){closeSearch();}});
+  document.addEventListener('click',function(e){if(!e.target.closest('#lcbook .lcb-search')) res.hidden=true;});
+  $('.lcb-open-search').addEventListener('click',function(){root.classList.add('lcb-searching'); setTimeout(function(){input.focus()},30);});
+  function closeSearch(){root.classList.remove('lcb-searching'); input.value=''; res.hidden=true; clear(); input.blur();}
+  $('.lcb-close-search').addEventListener('click',closeSearch);
+
+  function clear(){[].forEach.call($$('.lcb-sec mark'),function(m){var p=m.parentNode;m.replaceWith(document.createTextNode(m.textContent));p.normalize();});}
+  function mark(el,q){
+    var re=rx(q), w=document.createTreeWalker(el,NodeFilter.SHOW_TEXT), nodes=[];
+    while(w.nextNode()) nodes.push(w.currentNode);
+    nodes.forEach(function(n){ if(!n.nodeValue.match(re)) return; var s=document.createElement('span'); s.innerHTML=esc(n.nodeValue).replace(re,function(m){return '<mark>'+m+'</mark>'}); var f=document.createDocumentFragment(); while(s.firstChild) f.appendChild(s.firstChild); n.parentNode.replaceChild(f,n); });
+  }
+  function active(id){[].forEach.call($$('.lcb-toc a.on'),function(a){a.classList.remove('on')}); var a=$('.lcb-toc a[data-go="'+id+'"]'); if(a) a.classList.add('on');}
+  function go(id,q,noHash){
+    var el=document.getElementById(id); if(!el) return;
+    var sec=el.classList.contains('lcb-sec')?el:(el.closest('.lcb-sec')||el);
+    closeMenu(); clear(); setOpen(sec,true);
+    if(q){ mark(sec,q); if(root.classList.contains('lcb-searching')){root.classList.remove('lcb-searching'); input.value='';} }
+    syncTop(); scrollToEl(el); setTimeout(function(){syncTop(); scrollToEl(el);},60);
+    active(sec.id);
+    if(!noHash && history.replaceState) history.replaceState(null,'','#'+sec.id);
+  }
+  var tt; function toast(m){var t=$('.lcb-toast'); t.textContent=m; t.hidden=false; clearTimeout(tt); tt=setTimeout(function(){t.hidden=true},1800);}
+  root.addEventListener('click',function(e){
+    var g=e.target.closest('[data-go]');
+    if(g){e.preventDefault(); go(g.getAttribute('data-go'),g.getAttribute('data-q')); res.hidden=true; return;}
+    var c=e.target.closest('[data-copy]');
+    if(c){var url=location.href.split('#')[0]+'#'+c.getAttribute('data-copy');
+      try{navigator.clipboard.writeText(url).then(function(){toast('링크를 복사했어요')},function(){toast(url)});}catch(_){toast(url);} }
+  });
+  if('IntersectionObserver' in window){
+    var io=new IntersectionObserver(function(es){es.forEach(function(en){if(en.isIntersecting) active(en.target.id)})},{rootMargin:'-140px 0px -65% 0px'});
+    [].forEach.call($$('.lcb-sec'),function(s){io.observe(s)});
+  }
+
+  // 목차 서랍 (모바일)
+  var mb=$('.lcb-menu');
+  function lock(on){document.documentElement.style.overflow=on?'hidden':'';document.body.style.overflow=on?'hidden':'';}
+  function closeMenu(){root.classList.remove('lcb-open'); mb.setAttribute('aria-expanded','false'); lock(false);}
+  function openMenu(){root.classList.add('lcb-open'); mb.setAttribute('aria-expanded','true'); lock(true);}
+  mb.addEventListener('click',function(){ root.classList.contains('lcb-open')?closeMenu():openMenu(); });
+  $('.lcb-scrim').addEventListener('click',closeMenu);
+
+  // 플로팅 버튼
+  var fabEl=$('.lcb-fab');
+  function fab(){ var r=root.getBoundingClientRect(); fabEl.hidden=!(r.top< -400 && r.bottom>innerHeight*0.6); }
+  $('.lcb-fab-top').addEventListener('click',function(){ scrollTo(0,Math.max(0,root.getBoundingClientRect().top+pageYOffset-headerH)); });
+  $('.lcb-fab-toc').addEventListener('click',openMenu);
+
+  var h=location.hash.slice(1); if(h && document.getElementById(h)) setTimeout(function(){go(h,null,true)},400);
+})();
+</script>
